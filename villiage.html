@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Three.js</title>
+    <script src="resources/three.js"></script>
+    <script src="resources/OrbitControls.js"></script>
+    <script src="resources/MTLLoader.js"></script>
+    <script src="resources/OBJLoader.js"></script>
+    <title>Three框架</title>
+    <style type="text/css">
+        div#canvas-frame {
+            border: none;
+            cursor: pointer;
+            width: 1000px;
+            height:650px;
+            background-color:0xFFFFFF;
+        }
+    </style>
+    <script>
+        var renderer;
+        function initThree() {
+            width = document.getElementById('canvas-frame').clientWidth;
+            height = document.getElementById('canvas-frame').clientHeight;
+            renderer = new THREE.WebGLRenderer({antialias : true});
+            renderer.setSize(width, height);
+            document.getElementById('canvas-frame').appendChild(renderer.domElement);
+            renderer.setClearColor(0x000000, 1.0);
+        }
+
+        var camera;
+        function initCamera() {
+            camera = new THREE.PerspectiveCamera(40, 1000/650, 1, 1000);
+            camera.position.set(-200,300,300);
+            camera.lookAt(scene.position);
+        }
+
+        var scene;
+        function initScene() {
+            scene = new THREE.Scene();
+        }
+
+        var light;
+        function initLight() {
+            light=new THREE.PointLight(0xffffff);
+            light.position.set(300,400,200);
+            scene.add(light);
+            scene.add(new THREE.AmbientLight(0x333333));
+        }
+	
+        var loader;
+		function initloader() {
+		  loader=new THREE.OBJLoader();
+	      loader.load('resources/Village.obj',function(obj){
+		      obj.position.set(0,0,0);
+			  obj.scale.set(1,1,1);
+		      scene.add(obj);
+		      render();
+		  })
+		}
+
+		var renderer=new THREE.WebGLRenderer();
+	    function render() {
+	        //renderer.clear();
+	        renderer.render(scene, camera);
+	        //requestAnimationFrame(render);
+	    }
+
+		var controls;
+		function control() {
+			controls=new THREE.OrbitControls(camera);
+	        controls.addEventListener('change',render);
+	    }
+
+	    function threeStart() {
+	        initThree();
+	        initScene();
+		    initCamera();
+	        initLight();
+	        initloader();
+	        //render();
+		    control();
+	    }
+
+    </script>
+</head>
+
+<body onload="threeStart();">
+<div id="canvas-frame"></div>
+</body>
+</html>
